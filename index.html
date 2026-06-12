@@ -319,6 +319,62 @@
   .tag-tan   { border-color: rgba(201,168,124,0.4); color: var(--tan);      background: rgba(201,168,124,0.07); }
   .tag-muted { border-color: rgba(242,237,227,0.18); color: rgba(242,237,227,0.6); background: rgba(242,237,227,0.04); }
 
+  /* CERTIFICATIONS */
+  .certs-wrap { margin-top: 3.5rem; }
+
+  .certs-wrap h3 {
+    font-size: 0.76rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--tan);
+    font-weight: 500;
+    margin-bottom: 1.25rem;
+  }
+
+  .cert-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5rem 1.75rem;
+    transition: border-color 0.25s, transform 0.25s;
+    max-width: 560px;
+  }
+
+  .cert-card:hover { border-color: rgba(107,168,130,0.35); transform: translateY(-4px); }
+
+  .cert-info .cert-name {
+    font-family: "Playfair Display", serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 0.2rem;
+  }
+
+  .cert-info .cert-issuer { font-size: 0.85rem; color: rgba(242,237,227,0.5); }
+
+  .cert-link {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--green-lt);
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border: 1px solid rgba(107,168,130,0.35);
+    padding: 0.5rem 1rem;
+    border-radius: 3px;
+    transition: all 0.2s;
+  }
+
+  .cert-link:hover { background: rgba(107,168,130,0.1); border-color: var(--green-lt); }
+
   /* PROJECTS */
   .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
 
@@ -612,7 +668,7 @@
 
 <section id="skills">
   <p class="section-label">What I bring</p>
-  <h2 class="section-title">Skills</h2>
+  <h2 class="section-title">Skills &amp; Certifications</h2>
   <div class="skills-grid">
     <div class="skill-category">
       <h3>Onboarding & success</h3>
@@ -652,6 +708,17 @@
         <span class="tag tag-muted">Customer education</span>
         <span class="tag tag-muted">Cross-functional collaboration</span>
       </div>
+    </div>
+  </div>
+
+  <div class="certs-wrap">
+    <h3>Certifications</h3>
+    <div class="cert-card">
+      <div class="cert-info">
+        <div class="cert-name">Introduction to Data Analytics</div>
+        <div class="cert-issuer">IBM · Coursera · May 2024</div>
+      </div>
+      <a href="https://coursera.org/verify/H6XEG2UZ6XG2" class="cert-link" target="_blank" rel="noopener">Verify ↗</a>
     </div>
   </div>
 </section>
