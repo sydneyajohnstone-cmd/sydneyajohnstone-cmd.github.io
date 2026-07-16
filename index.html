@@ -518,6 +518,143 @@
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition: none !important; }
   }
+  /* REQUEST MODAL */
+  .request-trigger {
+    background: none;
+    border: none;
+    font: inherit;
+    cursor: pointer;
+    color: inherit;
+    padding: 0;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background: rgba(10,12,8,0.72);
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal-card {
+    background: #20231A;
+    border: 1px solid rgba(242,237,227,0.12);
+    border-radius: 8px;
+    max-width: 440px;
+    width: 100%;
+    padding: 2.5rem;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1.2rem;
+    background: none;
+    border: none;
+    color: rgba(242,237,227,0.5);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .modal-close:hover { color: var(--cream); }
+
+  .modal-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--green-lt);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  .modal-title {
+    font-family: "Playfair Display", serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+
+  .modal-sub {
+    font-size: 0.9rem;
+    color: rgba(242,237,227,0.6);
+    margin-bottom: 1.75rem;
+    line-height: 1.6;
+  }
+
+  .modal-field { margin-bottom: 1.1rem; }
+
+  .modal-field label {
+    display: block;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(242,237,227,0.55);
+    margin-bottom: 0.4rem;
+  }
+
+  .modal-field input,
+  .modal-field textarea {
+    width: 100%;
+    background: rgba(242,237,227,0.04);
+    border: 1px solid rgba(242,237,227,0.18);
+    border-radius: 4px;
+    padding: 0.7rem 0.85rem;
+    color: var(--cream);
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.92rem;
+    transition: border-color 0.2s;
+  }
+
+  .modal-field input:focus,
+  .modal-field textarea:focus {
+    outline: none;
+    border-color: var(--green-lt);
+  }
+
+  .modal-field textarea { resize: vertical; min-height: 70px; }
+
+  .modal-submit {
+    width: 100%;
+    background: var(--green);
+    color: var(--cream);
+    border: none;
+    border-radius: 4px;
+    padding: 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 0.5rem;
+  }
+
+  .modal-submit:hover { background: var(--green-lt); }
+  .modal-submit:disabled { opacity: 0.6; cursor: default; }
+
+  .modal-status {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: rgba(242,237,227,0.75);
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .modal-status.success { color: var(--green-lt); }
+  .modal-status.error { color: var(--tan); }
+
 </style>
 </head>
 <body>
@@ -773,7 +910,7 @@
       <div class="ref-name">Dan Kao</div>
       <div class="ref-title">CEO, TruckSmarter</div>
       <div class="ref-relation">Former manager</div>
-      <span class="ref-link" style="cursor:default;">Letter available on request</span>
+      <button type="button" class="ref-link request-trigger" onclick="openRequestModal('Dan Kao&rsquo;s reference letter')">Request letter ↗</button>
     </div>
   </div>
 </section>
@@ -786,8 +923,8 @@
   <p class="contact-sub">Open to roles in Customer Success, onboarding, or operations. Based in New York, open to remote.</p>
   <a href="https://linkedin.com/in/sydney-johnstone-sdsu" class="btn btn-primary" target="_blank" rel="noopener" style="display:inline-block; margin-bottom:2rem;">Connect on LinkedIn</a>
   <div class="contact-links">
-    <span class="contact-link" style="border-bottom:none; cursor:default;">Email available on request</span>
-    <span class="contact-link" style="border-bottom:none; cursor:default;">Phone available on request</span>
+    <button type="button" class="contact-link request-trigger" onclick="openRequestModal('email address')">Request email ↗</button>
+    <button type="button" class="contact-link request-trigger" onclick="openRequestModal('phone number')">Request phone ↗</button>
   </div>
 </section>
 
@@ -795,6 +932,115 @@
   <span>Sydney Johnstone · Customer Success Professional</span>
   <span>New York, New York</span>
 </footer>
+
+<!-- REQUEST ACCESS MODAL -->
+<div class="modal-overlay" id="requestModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-card">
+    <button type="button" class="modal-close" onclick="closeRequestModal()" aria-label="Close">&times;</button>
+    <p class="modal-label">Request access</p>
+    <h3 class="modal-title" id="modalTitle">Request</h3>
+    <p class="modal-sub">Leave your details and I'll send it over by email. I review each request personally.</p>
+
+    <form id="requestForm">
+      <!-- Identifies which item was requested -->
+      <input type="hidden" name="requested_item" id="requestedItem" value="">
+      <input type="hidden" name="_subject" id="requestSubject" value="New request from your resume site">
+
+      <div class="modal-field">
+        <label for="reqName">Your name</label>
+        <input type="text" id="reqName" name="name" required>
+      </div>
+      <div class="modal-field">
+        <label for="reqEmail">Your email</label>
+        <input type="email" id="reqEmail" name="email" required>
+      </div>
+      <div class="modal-field">
+        <label for="reqMessage">Message (optional)</label>
+        <textarea id="reqMessage" name="message" placeholder="A quick note on who you are / the role"></textarea>
+      </div>
+      <button type="submit" class="modal-submit" id="reqSubmit">Send request</button>
+    </form>
+
+    <div class="modal-status" id="reqStatus" style="display:none;"></div>
+  </div>
+</div>
+
+<script>
+  // ===========================================================
+  //  SET THIS to your Formspree endpoint after you create a form
+  //  at https://formspree.io  (looks like https://formspree.io/f/abcxyz)
+  // ===========================================================
+  var FORMSPREE_ENDPOINT = "https://formspree.io/f/maqrqrnq";
+
+  var modal = document.getElementById("requestModal");
+  var form = document.getElementById("requestForm");
+  var statusBox = document.getElementById("reqStatus");
+  var submitBtn = document.getElementById("reqSubmit");
+
+  function openRequestModal(itemName) {
+    document.getElementById("modalTitle").innerHTML = "Request " + itemName;
+    document.getElementById("requestedItem").value = itemName.replace(/&rsquo;/g, "'");
+    document.getElementById("requestSubject").value = "Resume site request: " + itemName.replace(/&rsquo;/g, "'");
+    form.style.display = "";
+    statusBox.style.display = "none";
+    statusBox.className = "modal-status";
+    modal.classList.add("open");
+    document.body.style.overflow = "hidden";
+    setTimeout(function(){ document.getElementById("reqName").focus(); }, 50);
+  }
+
+  function closeRequestModal() {
+    modal.classList.remove("open");
+    document.body.style.overflow = "";
+    form.reset();
+  }
+
+  // Close on backdrop click
+  modal.addEventListener("click", function(e) {
+    if (e.target === modal) closeRequestModal();
+  });
+  // Close on Escape
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape" && modal.classList.contains("open")) closeRequestModal();
+  });
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    if (FORMSPREE_ENDPOINT.indexOf("YOUR_FORM_ID") !== -1) {
+      showStatus("This form isn't connected yet. Add your Formspree endpoint to enable requests.", "error");
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Sending...";
+
+    fetch(FORMSPREE_ENDPOINT, {
+      method: "POST",
+      body: new FormData(form),
+      headers: { "Accept": "application/json" }
+    }).then(function(response) {
+      if (response.ok) {
+        form.style.display = "none";
+        showStatus("Thanks! Your request has been sent. I'll be in touch by email soon.", "success");
+        form.reset();
+      } else {
+        showStatus("Something went wrong. Please try again, or reach me on LinkedIn.", "error");
+      }
+    }).catch(function() {
+      showStatus("Something went wrong. Please try again, or reach me on LinkedIn.", "error");
+    }).finally(function() {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Send request";
+    });
+  });
+
+  function showStatus(msg, type) {
+    statusBox.textContent = msg;
+    statusBox.className = "modal-status " + (type || "");
+    statusBox.style.display = "block";
+  }
+</script>
 
 </body>
 </html>
